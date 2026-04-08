@@ -307,17 +307,17 @@ def main():
     tabs = st.tabs([" Live Prediction", "📊 Model Comparison", "📈 Cross-Validation", "ℹ️ About"])
 
     with tabs[0]:
-        # def send_alert(msg):
-        #     account_sid = twilio_sid
-        #     auth_token = twilio_token
+        def send_alert(msg):
+            account_sid = twilio_sid
+            auth_token = twilio_token
+            client = Client(account_sid, auth_token)
 
-        #     client = Client(account_sid, auth_token)
-
-        #     message = client.messages.create(
-        #         from_=twilio_token,
-        #         body=msg,
-        #         to=twilio_to
-        #     )
+            message = client.messages.create(
+                from_ = twilio_from,
+                body=msg,
+                to = twilio_to
+            )
+            print(message.sid)
         st.header(" Real-Time Risk Prediction")
 
         col_inp, col_res = st.columns([1, 1.4], gap="large")
@@ -384,29 +384,30 @@ def main():
                     message = (
                         f"⚠️ Health Alert ⚠️\n\n"
                         f"Risk Level: HIGH\n\n"
-                        f"HEAT PREDICTION RISK: {proba_h}\n\n"
-                        f"DEHYDRATION PREDICTION RISK: {proba_d}\n\n"
+                        f"Heat Risk: {proba_h[overall] * 100:.2f}\n\n"
+                        f"Dehydration Risk: {proba_d[overall] * 100:.2f}\n\n"
                         f"Please take immediate precautions:\n"
                         f"- Stay hydrated 💧\n"
                         f"- Avoid direct sunlight ☀️\n"
                         f"- Take rest if feeling unwell 🛑\n\n"
                         f"Stay safe!"
                     )
-                    # send_alert(message)
+                    send_alert(message)
                 elif overall == 1:
                     st.warning(" **MODERATE RISK** — Please monitor closely and consider rest + hydration.")
                     message = (
                         f"⚠️ Health Alert ⚠️\n\n"
                         f"Risk Level: MODERATE\n\n"
-                        f"HEAT PREDICTION RISK: {proba_h}\n\n"
-                        f"DEHYDRATION PREDICTION RISK: {proba_d}\n\n"
+                        f"Heat Risk: {proba_h[overall] * 100:.2f}\n\n"
+                        f"Dehydration Risk: {proba_d[overall] * 100:.2f}\n\n"
                         f"Please take immediate precautions:\n"
                         f"- Stay hydrated 💧\n"
                         f"- Avoid direct sunlight ☀️\n"
                         f"- Take rest if feeling unwell 🛑\n\n"
                         f"Stay safe!"
                     )
-                    # send_alert(message)
+                    send_alert(message)
+
                 else:
                     st.success(" **NORMAL** — All vitals within safe ranges.")
 
